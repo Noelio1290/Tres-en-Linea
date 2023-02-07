@@ -1,9 +1,12 @@
 import React from "react"
 
-function Square({onClick, value}) {
+function Square({clickHandler, value, index}) {
+    const onButtonClick = () => {
+        clickHandler(index)
+    }
     return(
         <button className="square" onClick=
-        {onClick}>
+        {onButtonClick}>
             {value}
         </button>
     )

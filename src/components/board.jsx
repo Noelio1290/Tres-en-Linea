@@ -1,39 +1,33 @@
-import React from "react"
+import React, {useState} from "react"
 import Square from "./square"
 
-class Board extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            squares: Array(9).fill(null),
-            xIsNext: true,
+const Board = () => {
+    let [squares, setSquare] = useState(Array(9).fill(null));
+    let [xIsNext, setxIsNext] = useState(true);
+    
+
+    const handleClick = (i) => {
+        const copySquare = [...squares];
+
+        if (calculateWinner(copySquare) || copySquare[i]){
+            return  
         }
+        copySquare[i] = xIsNext ? 'X' : 'O';
+        setSquare(copySquare)
+        setxIsNext(!xIsNext)
     };
 
-    handleClick(i) {
-        const squares = 
-        this.state.squares.slice();
-
-        if (this.calculateWinner(squares) || squares[i]){
-            return;
-        }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
-            squares:squares,
-            xIsNext: !this.state.xIsNext
-        })
-    };
-
-    renderSquare(i){
+    const renderSquare = (i) => {
         return (
-            <Square 
-                value={this.state.squares[i]} 
-                onClick={() => this.handleClick(i)}
+            <Square
+                index={i}
+                value={squares[i]} 
+                clickHandler={handleClick}
             />
         )
     };
 
-    calculateWinner(squares) {
+    const calculateWinner = (squares) => {
         const lines = [
           [0, 1, 2],
           [3, 4, 5],
@@ -51,39 +45,38 @@ class Board extends React.Component {
           }
         }
         return null;
-      }
+    };
+    
+    const winner = calculateWinner(squares);
+        let status;
+        if(winner){
+            status= 'winner: ' + winner;
+        } else {
+            status = 'Next player: ' + 
+            (xIsNext ? 'X' : 'O');
+        };
 
-    render(){
-        const winner = 
-        this.calculateWinner(this.state.squares);
-            let status;
-            if(winner){
-                status= 'winner: ' + winner;
-            } else {
-                status = 'Next player: ' + 
-                (this.state.xIsNext ? 'X' : 'O');
-            };
-        return (
+    return (
         <div>
             <div className="status">{status}</div>
             <div className="board-row">
-                {this.renderSquare(0)}
-                {this.renderSquare(1)}
-                {this.renderSquare(2)}
+                {renderSquare(0)}
+                {renderSquare(1)}
+                {renderSquare(2)}
             </div>
             <div className="board-row">
-                {this.renderSquare(3)}
-                {this.renderSquare(4)}
-                {this.renderSquare(5)}
+                {renderSquare(3)}
+                {renderSquare(4)}
+                {renderSquare(5)}
             </div>
             <div className="board-row">
-                {this.renderSquare(6)}
-                {this.renderSquare(7)}
-                {this.renderSquare(8)}
+                {renderSquare(6)}
+                {renderSquare(7)}
+                {renderSquare(8)}
             </div>
         </div>
-        )
-    };
+    
+    )
 };
 
 export default Board
